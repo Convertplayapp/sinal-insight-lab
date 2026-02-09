@@ -1,7 +1,17 @@
 import { motion } from 'framer-motion';
-import { Check, Shield, FileText, MessageCircle, CheckSquare } from 'lucide-react';
+import { Check, Shield, FileText, MessageCircle, CheckSquare, Lock, Clock } from 'lucide-react';
+import { type Result } from '@/lib/scoring';
+
+const pillarNames: Record<string, string> = {
+  S: 'Segurança Emocional',
+  I: 'Independência',
+  N: 'Comunicação',
+  A: 'Apoio e Respeito',
+  L: 'Liberdade Pessoal',
+};
 
 interface PurchaseScreenProps {
+  result: Result;
   onPurchase: () => void;
   onBack: () => void;
 }
@@ -13,7 +23,22 @@ const benefits = [
   { icon: Check, text: 'Plano de ação personalizado em etapas' },
 ];
 
-const PurchaseScreen = ({ onPurchase, onBack }: PurchaseScreenProps) => {
+function getDynamicPhrase(result: Result): string {
+  const lowest = [...result.pillarScores].sort((a, b) => a.percentage - b.percentage)[0];
+  
+  if (result.percentage >= 75) {
+    return 'Você demonstra boa maturidade emocional, e entender seus pontos fortes pode ampliar ainda mais sua qualidade de conexão.';
+  }
+  if (result.percentage >= 50) {
+    return 'Seu relacionamento apresenta bons fundamentos, e alguns refinamentos podem fortalecer ainda mais a harmonia.';
+  }
+  return `Com base nas suas respostas, pequenos ajustes na área de ${pillarNames[lowest.pillar]} podem gerar grande impacto positivo.`;
+}
+
+const PurchaseScreen = ({ result, onPurchase, onBack }: PurchaseScreenProps) => {
+  // Get the 3 locked pillars (indices 2,3,4)
+  const lockedPillars = result.pillarScores.slice(2, 5);
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-12">
       <motion.div
@@ -36,7 +61,7 @@ const PurchaseScreen = ({ onPurchase, onBack }: PurchaseScreenProps) => {
           </div>
 
           {/* Price */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-2">
             <div className="inline-flex items-baseline gap-1">
               <span className="text-sm text-muted-foreground font-body">R$</span>
               <span className="font-display text-5xl font-bold text-foreground">17</span>
@@ -44,8 +69,13 @@ const PurchaseScreen = ({ onPurchase, onBack }: PurchaseScreenProps) => {
             <p className="text-xs text-muted-foreground font-body mt-1">Pagamento único</p>
           </div>
 
+          {/* Comparação de valor suave */}
+          <p className="text-center text-xs text-muted-foreground/70 font-body mb-8">
+            Menos que o valor de um lanche.
+          </p>
+
           {/* Benefits */}
-          <div className="space-y-4 mb-8">
+          <div className="space-y-4 mb-6">
             {benefits.map((b, i) => (
               <motion.div
                 key={i}
@@ -62,6 +92,39 @@ const PurchaseScreen = ({ onPurchase, onBack }: PurchaseScreenProps) => {
             ))}
           </div>
 
+          {/* Frase dinâmica personalizada */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="rounded-xl bg-accent/5 border border-accent/10 p-4 mb-6"
+          >
+            <p className="font-body text-sm text-foreground/80 text-center italic leading-relaxed">
+              "{getDynamicPhrase(result)}"
+            </p>
+          </motion.div>
+
+          {/* Mini preview conteúdo bloqueado */}
+          <div className="rounded-xl border border-border/50 p-4 mb-6 space-y-2.5">
+            <p className="font-body text-xs text-muted-foreground mb-3 text-center">
+              Conteúdo bloqueado na sua análise:
+            </p>
+            {lockedPillars.map((p, i) => (
+              <div key={i} className="flex items-center justify-between">
+                <span className="font-body text-sm text-foreground/70">{pillarNames[p.pillar]}</span>
+                <Lock className="w-3.5 h-3.5 text-muted-foreground/50" />
+              </div>
+            ))}
+            <p className="font-body text-xs text-muted-foreground/70 text-center pt-2">
+              Desbloqueie para visualizar seu nível detalhado e recomendações personalizadas.
+            </p>
+          </div>
+
+          {/* Micro prova social */}
+          <p className="text-center text-xs text-muted-foreground/60 font-body mb-6">
+            Milhares de análises realizadas · Ferramenta utilizada diariamente
+          </p>
+
           {/* CTA */}
           <motion.button
             whileHover={{ scale: 1.02 }}
@@ -72,10 +135,18 @@ const PurchaseScreen = ({ onPurchase, onBack }: PurchaseScreenProps) => {
             Desbloquear Agora
           </motion.button>
 
-          {/* Guarantee */}
-          <div className="flex items-center justify-center gap-2 mt-5">
-            <Shield className="w-4 h-4 text-muted-foreground" />
-            <span className="font-body text-xs text-muted-foreground">
+          {/* Tempo de entrega */}
+          <div className="flex items-center justify-center gap-1.5 mt-3">
+            <Clock className="w-3.5 h-3.5 text-muted-foreground/70" />
+            <span className="font-body text-xs text-muted-foreground/70">
+              Acesso imediato após confirmação
+            </span>
+          </div>
+
+          {/* Garantia com contraste melhorado */}
+          <div className="flex items-center justify-center gap-2 mt-4 bg-accent/5 rounded-lg py-2.5 px-4">
+            <Shield className="w-4 h-4 text-accent/70" />
+            <span className="font-body text-xs text-foreground/60 font-medium">
               Garantia de 7 dias — satisfação ou reembolso
             </span>
           </div>

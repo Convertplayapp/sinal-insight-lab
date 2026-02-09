@@ -27,6 +27,7 @@ const Index = () => {
       )}
       {screen === 'purchase' && (
         <PurchaseScreen
+          result={result!}
           onPurchase={() => setScreen('full')}
           onBack={() => setScreen('partial')}
         />
