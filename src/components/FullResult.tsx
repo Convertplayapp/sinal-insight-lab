@@ -5,6 +5,7 @@ import { pillarLabels, pillarIcons, pillarDescriptions } from '@/data/questions'
 
 interface FullResultProps {
   result: Result;
+  showSuccess?: boolean;
 }
 
 const actionPlans: Record<string, string[]> = {
@@ -43,12 +44,18 @@ const assertivePhrases = [
   '"Eu entendo seu ponto de vista, e ao mesmo tempo, sinto que..."',
 ];
 
-const FullResult = ({ result }: FullResultProps) => {
+const FullResult = ({ result, showSuccess }: FullResultProps) => {
   const levelColor = levelColors[result.level];
 
   return (
     <div className="min-h-screen bg-background py-12 px-4">
       <div className="max-w-2xl mx-auto">
+        {showSuccess && (
+          <div className="mb-6 text-center text-xs text-accent font-body">
+            Diagnóstico completo liberado com sucesso.
+          </div>
+        )}
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
