@@ -1,13 +1,38 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from 'react';
+import HeroSection from '@/components/HeroSection';
+import Quiz from '@/components/Quiz';
+import PartialResult from '@/components/PartialResult';
+import PurchaseScreen from '@/components/PurchaseScreen';
+import FullResult from '@/components/FullResult';
+import { calculateResult, type Result } from '@/lib/scoring';
+
+type Screen = 'hero' | 'quiz' | 'partial' | 'purchase' | 'full';
 
 const Index = () => {
+  const [screen, setScreen] = useState<Screen>('hero');
+  const [result, setResult] = useState<Result | null>(null);
+
+  const handleQuizComplete = (answers: Record<number, number>) => {
+    const r = calculateResult(answers);
+    setResult(r);
+    setScreen('partial');
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <>
+      {screen === 'hero' && <HeroSection onStart={() => setScreen('quiz')} />}
+      {screen === 'quiz' && <Quiz onComplete={handleQuizComplete} />}
+      {screen === 'partial' && result && (
+        <PartialResult result={result} onUnlock={() => setScreen('purchase')} />
+      )}
+      {screen === 'purchase' && (
+        <PurchaseScreen
+          onPurchase={() => setScreen('full')}
+          onBack={() => setScreen('partial')}
+        />
+      )}
+      {screen === 'full' && result && <FullResult result={result} />}
+    </>
   );
 };
 
