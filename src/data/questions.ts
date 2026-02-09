@@ -52,9 +52,9 @@ export const questions: Question[] = [
   { id: 12, text: 'Nas decisões do casal, você sente que a opinião dele vale mais que a sua?', pillar: 'A' },
 
   // L – Liberdade Pessoal
-  { id: 13, text: 'Sinto que posso expressar minhas opiniões livremente, mesmo que sejam diferentes.', pillar: 'L' },
-  { id: 14, text: 'Não me sinto controlado(a) em relação às minhas escolhas pessoais.', pillar: 'L' },
-  { id: 15, text: 'Tenho liberdade para crescer e mudar dentro da relação.', pillar: 'L' },
+  { id: 13, text: 'Ele mexe no seu celular, redes sociais ou quer saber detalhes de tudo que você faz?', pillar: 'L' },
+  { id: 14, text: 'Você já mudou seu jeito de ser, se vestir ou agir para não \'causar problemas\'?', pillar: 'L' },
+  { id: 15, text: 'Tem a sensação de que está \'andando em ovos\' ao redor dele?', pillar: 'L' },
 ];
 
 export const scaleLabels = ['Nunca', 'Raramente', 'Às vezes', 'Frequentemente', 'Sempre'];
