@@ -37,9 +37,9 @@ export const questions: Question[] = [
   { id: 3, text: 'Quando você está passando por um momento difícil, ele é a primeira pessoa que você quer procurar?', pillar: 'S' },
 
   // I – Independência
-  { id: 4, text: 'Mantenho minhas amizades e interesses pessoais sem culpa.', pillar: 'I' },
-  { id: 5, text: 'Sinto que posso tomar decisões importantes sobre minha vida sem pedir permissão.', pillar: 'I' },
-  { id: 6, text: 'Meu(minha) parceiro(a) respeita meu tempo e espaço individual.', pillar: 'I' },
+  { id: 4, text: 'Você já deixou de fazer algo que gostava porque sabia que ele não ia gostar?', pillar: 'I' },
+  { id: 5, text: 'Precisa \'preparar o terreno\' antes de contar que vai sair com suas amigas?', pillar: 'I' },
+  { id: 6, text: 'Sente que precisa da aprovação dele para tomar decisões sobre sua própria vida?', pillar: 'I' },
 
   // N – Nível de Comunicação
   { id: 7, text: 'Conseguimos conversar sobre assuntos difíceis sem que a discussão escale.', pillar: 'N' },
