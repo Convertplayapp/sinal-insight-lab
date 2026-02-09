@@ -42,7 +42,7 @@ const PurchaseScreen = ({ onPurchase, onClose }: PurchaseScreenProps) => {
     if (!email || isProcessing) return;
 
     if (!checkoutBaseUrl) {
-      setError('Gateway Asaas não configurado. Defina VITE_ASAAS_CHECKOUT_URL.');
+      setError('Gateway Asaas não configurado. Defina VITE_ASAAS_CHECKOUT_URL (a API key deve ficar no backend).');
       return;
     }
 
