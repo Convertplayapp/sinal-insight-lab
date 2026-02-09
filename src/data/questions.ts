@@ -47,9 +47,9 @@ export const questions: Question[] = [
   { id: 9, text: 'Ele realmente escuta o que você diz ou só espera a vez dele falar?', pillar: 'N' },
 
   // A – Apoio e Respeito
-  { id: 10, text: 'Meu(minha) parceiro(a) celebra minhas conquistas genuinamente.', pillar: 'A' },
-  { id: 11, text: 'Sinto que sou tratado(a) como igual na relação.', pillar: 'A' },
-  { id: 12, text: 'Há respeito mútuo mesmo quando discordamos.', pillar: 'A' },
+  { id: 10, text: 'Quando você conquista algo importante, ele fica genuinamente feliz ou meio que ignora?', pillar: 'A' },
+  { id: 11, text: 'Você sente que está sempre \'dando um jeitinho\' de não contrariá-lo?', pillar: 'A' },
+  { id: 12, text: 'Nas decisões do casal, você sente que a opinião dele vale mais que a sua?', pillar: 'A' },
 
   // L – Liberdade Pessoal
   { id: 13, text: 'Sinto que posso expressar minhas opiniões livremente, mesmo que sejam diferentes.', pillar: 'L' },
