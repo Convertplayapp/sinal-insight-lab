@@ -32,9 +32,9 @@ export const pillarIcons: Record<Pillar, string> = {
 
 export const questions: Question[] = [
   // S – Segurança Emocional
-  { id: 1, text: 'Eu me sinto à vontade para ser vulnerável com meu(minha) parceiro(a).', pillar: 'S' },
-  { id: 2, text: 'Confio que meu(minha) parceiro(a) não usará minhas fraquezas contra mim.', pillar: 'S' },
-  { id: 3, text: 'Sinto que posso contar com meu(minha) parceiro(a) em momentos difíceis.', pillar: 'S' },
+  { id: 1, text: 'Você tem medo de contar como realmente se sente para ele?', pillar: 'S' },
+  { id: 2, text: 'Já aconteceu dele usar algo que você contou em confiança contra você em uma discussão?', pillar: 'S' },
+  { id: 3, text: 'Quando você está passando por um momento difícil, ele é a primeira pessoa que você quer procurar?', pillar: 'S' },
 
   // I – Independência
   { id: 4, text: 'Mantenho minhas amizades e interesses pessoais sem culpa.', pillar: 'I' },
