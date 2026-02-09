@@ -14,7 +14,8 @@ const PurchaseScreen = ({ onPurchase, onClose }: PurchaseScreenProps) => {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [error, setError] = useState('');
 
-  const checkoutBaseUrl = import.meta.env.VITE_CHECKOUT_URL as string | undefined;
+  const checkoutBaseUrl = (import.meta.env.VITE_ASAAS_CHECKOUT_URL ??
+    import.meta.env.VITE_CHECKOUT_URL) as string | undefined;
   const checkoutUrl = checkoutBaseUrl
     ? `${checkoutBaseUrl}${checkoutBaseUrl.includes('?') ? '&' : '?'}email=${encodeURIComponent(email)}`
     : '';
@@ -41,7 +42,7 @@ const PurchaseScreen = ({ onPurchase, onClose }: PurchaseScreenProps) => {
     if (!email || isProcessing) return;
 
     if (!checkoutBaseUrl) {
-      setError('Gateway não configurado.');
+      setError('Gateway Asaas não configurado. Defina VITE_ASAAS_CHECKOUT_URL.');
       return;
     }
 
@@ -155,7 +156,7 @@ const PurchaseScreen = ({ onPurchase, onClose }: PurchaseScreenProps) => {
             Acesso liberado automaticamente após confirmação
           </p>
           <p className="text-[11px] text-muted-foreground font-body">Ambiente seguro</p>
-          <p className="text-[11px] text-muted-foreground font-body">Pagamento processado via gateway seguro</p>
+          <p className="text-[11px] text-muted-foreground font-body">Pagamento processado via Asaas</p>
           <div className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground font-body">
             <Shield className="w-3 h-3" /> Garantia de 7 dias
           </div>
