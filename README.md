@@ -50,6 +50,18 @@ npm run dev
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
 
+## Onde configuro a integração via .env?
+
+Se você só adicionou variáveis no `.env`, a configuração local fica **na raiz do projeto** (mesmo nível do `package.json`).
+
+- **Localmente**: use `.env` e/ou `.env.local` com suas chaves/URLs. Reinicie o `npm run dev` após mudar.
+- **Lovable Cloud**: sem acesso ao cloud, **não há pasta local** para isso. As variáveis de ambiente precisam ser definidas no painel do projeto em Lovable.
+
+Se o app não está lendo as variáveis, verifique:
+- o nome exato das variáveis (ex.: `VITE_` para Vite),
+- se o arquivo está na raiz,
+- e se o servidor foi reiniciado.
+
 ## What technologies are used for this project?
 
 This project is built with:
