@@ -42,9 +42,9 @@ export const questions: Question[] = [
   { id: 6, text: 'Sente que precisa da aprovação dele para tomar decisões sobre sua própria vida?', pillar: 'I' },
 
   // N – Nível de Comunicação
-  { id: 7, text: 'Conseguimos conversar sobre assuntos difíceis sem que a discussão escale.', pillar: 'N' },
-  { id: 8, text: 'Sinto que sou ouvido(a) quando expresso minhas necessidades.', pillar: 'N' },
-  { id: 9, text: 'Nossos conflitos são resolvidos de forma respeitosa e construtiva.', pillar: 'N' },
+  { id: 7, text: 'Você \'engole\' o que sente para evitar uma briga?', pillar: 'N' },
+  { id: 8, text: 'Quando você tenta conversar sobre algo que te incomoda, a discussão vira sobre outra coisa ou sobre você?', pillar: 'N' },
+  { id: 9, text: 'Ele realmente escuta o que você diz ou só espera a vez dele falar?', pillar: 'N' },
 
   // A – Apoio e Respeito
   { id: 10, text: 'Meu(minha) parceiro(a) celebra minhas conquistas genuinamente.', pillar: 'A' },
