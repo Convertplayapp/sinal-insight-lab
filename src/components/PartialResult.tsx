@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Lock, Eye } from 'lucide-react';
+import { Lock, Eye, CheckCircle, Shield } from 'lucide-react';
 import { Result, levelLabels, levelColors } from '@/lib/scoring';
 import { pillarLabels, pillarIcons, type Pillar } from '@/data/questions';
 
@@ -13,18 +13,26 @@ const lockedPillars: Pillar[] = ['N', 'A', 'L'];
 
 const lockedPillarLabels: Record<Pillar, string> = {
   N: 'Ciclo de Manipulação',
-  A: 'Amor ou Prisão?',
-  L: 'Gatilhos Tóxicos',
+  A: 'Risco de Abuso Emocional',
+  L: 'Seus Padrões Repetidos',
   S: pillarLabels.S,
   I: pillarLabels.I,
 };
 
 const lockedPillarSubtitles: Record<Pillar, string> = {
   N: 'Você está sendo controlada sem perceber?',
-  A: 'Descubra se isso é amor de verdade',
-  L: 'Os sinais que você ignora todo dia',
+  A: 'Identifique os sinais antes que seja tarde',
+  L: 'Por que você atrai relacionamentos assim?',
   S: '',
   I: '',
+};
+
+const lockedPillarIcons: Record<Pillar, string> = {
+  N: '🚨',
+  A: '💔',
+  L: '🎭',
+  S: pillarIcons.S,
+  I: pillarIcons.I,
 };
 
 const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
@@ -120,24 +128,23 @@ const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
             .map((p) => (
               <div
                 key={p.pillar}
-                className="card-gradient rounded-xl shadow-card p-5 relative overflow-hidden"
+                className="card-gradient rounded-xl shadow-card p-5 relative overflow-hidden locked-card"
               >
-                <div className="blur-sm select-none pointer-events-none">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="font-body text-sm font-medium text-foreground flex items-center gap-2">
-                      <span>{pillarIcons[p.pillar]}</span>
-                      {lockedPillarLabels[p.pillar]}
-                    </span>
-                    <span className="font-body text-sm font-semibold">--%</span>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="font-body text-sm font-medium text-foreground flex items-center gap-2">
+                    <span>{lockedPillarIcons[p.pillar]}</span>
+                    {lockedPillarLabels[p.pillar]}
+                  </span>
+                  <div className="percentage-blur">
+                    <Lock className="w-4 h-4" />
+                    <span className="blur-text">??%</span>
                   </div>
-                  <p className="text-xs text-muted-foreground mb-3 font-body">
-                    {lockedPillarSubtitles[p.pillar]}
-                  </p>
-                  <div className="w-full h-2 bg-muted rounded-full" />
                 </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Lock className="w-5 h-5 text-muted-foreground/60" />
-                </div>
+                <p className="text-xs text-muted-foreground mb-3 font-body description visible">
+                  {lockedPillarSubtitles[p.pillar]}
+                </p>
+                <div className="w-full h-2 bg-muted rounded-full" />
+                <div className="locked-overlay-minimal" />
               </div>
             ))}
         </div>
@@ -149,12 +156,16 @@ const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
           transition={{ delay: 1.2 }}
           className="text-center"
         >
-          <p className="text-xs text-muted-foreground mb-2 font-body">
-            ⏰ 3.492 mulheres já descobriram a verdade sobre seus relacionamentos
-          </p>
-          <p className="text-xs text-muted-foreground mb-3 font-body">
-            💜 Acesso imediato e 100% confidencial
-          </p>
+          <div className="social-proof">
+            <div className="stat">
+              <CheckCircle className="icon-success" />
+              <span>3.492 mulheres já descobriram a verdade</span>
+            </div>
+            <div className="stat">
+              <Shield className="icon-security" />
+              <span>Acesso imediato e 100% confidencial</span>
+            </div>
+          </div>
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
