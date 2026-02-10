@@ -65,7 +65,7 @@ const Quiz = ({ onComplete }: QuizProps) => {
             >
               <div className="flex justify-center mb-6">
                 <img
-                  src="https://res.cloudinary.com/dsxqn2er7/image/upload/v1770686747/ChatGPT_Image_9_de_fev._de_2026_22_19_32_t54d6l.png"
+                  src="https://res.cloudinary.com/dsxqn2er7/image/upload/v1770687848/ChatGPT_Image_9_de_fev._de_2026_22_43_53_opkwkq.png"
                   alt="Método SINAL"
                   className="w-32 md:w-36 opacity-90"
                   loading="lazy"
