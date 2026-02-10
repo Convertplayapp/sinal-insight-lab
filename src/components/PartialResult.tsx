@@ -12,19 +12,39 @@ const visiblePillars: Pillar[] = ['S', 'I'];
 const lockedPillars: Pillar[] = ['N', 'A', 'L'];
 
 const lockedPillarLabels: Record<Pillar, string> = {
-  N: 'Ciclo de Manipulação',
-  A: 'Amor ou Prisão?',
-  L: 'Gatilhos Tóxicos',
+  N: 'Padrões de Diálogo',
+  A: 'Vínculo e Autonomia',
+  L: 'Sensibilidades do Dia a Dia',
   S: pillarLabels.S,
   I: pillarLabels.I,
 };
 
 const lockedPillarSubtitles: Record<Pillar, string> = {
-  N: 'Você está sendo controlada sem perceber?',
-  A: 'Descubra se isso é amor de verdade',
-  L: 'Os sinais que você ignora todo dia',
+  N: 'Perceba quando as conversas ficam confusas ou circulares.',
+  A: 'Reflita sobre o equilíbrio entre proximidade e liberdade.',
+  L: 'Pequenos gatilhos podem revelar necessidades importantes.',
   S: '',
   I: '',
+};
+
+const getSummaryTitle = (percentage: number) => {
+  if (percentage <= 39) {
+    return 'Panorama equilibrado com oportunidades de crescimento';
+  }
+  if (percentage <= 69) {
+    return 'Sinais moderados que pedem atenção gentil';
+  }
+  return 'Ponto importante de reflexão e cuidado';
+};
+
+const getSummaryMessage = (percentage: number) => {
+  if (percentage <= 39) {
+    return `${percentage}% sugere estabilidade com espaço para ajustes opcionais. Isso pode explicar o que você vem sentindo e trazer mais clareza.`;
+  }
+  if (percentage <= 69) {
+    return `${percentage}% indica sinais de desgaste leve a moderado. Esse resultado pode organizar o que você vem sentindo e incentivar autoconhecimento.`;
+  }
+  return `${percentage}% aponta indícios mais relevantes. Esse resultado pode explicar o que você vem sentindo e apoiar decisões mais conscientes.`;
 };
 
 const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
@@ -75,10 +95,10 @@ const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
             </span>
           </div>
           <h3 className="font-display text-xl font-semibold text-foreground mb-1">
-            Alerta: Seu Relacionamento Está Te Esgotando
+            {getSummaryTitle(result.percentage)}
           </h3>
           <p className="font-body text-sm text-muted-foreground leading-relaxed max-w-sm mx-auto">
-            {result.percentage}% é um sinal de alerta. O que está bloqueado pode ser a resposta que você procura há meses.
+            {getSummaryMessage(result.percentage)}
           </p>
         </motion.div>
 
@@ -150,7 +170,7 @@ const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
           className="text-center"
         >
           <p className="text-xs text-muted-foreground mb-2 font-body">
-            ⏰ 3.492 mulheres já descobriram a verdade sobre seus relacionamentos
+            ⏰ 3.492 mulheres já conquistaram mais clareza sobre seus relacionamentos
           </p>
           <p className="text-xs text-muted-foreground mb-3 font-body">
             💜 Acesso imediato e 100% confidencial
@@ -165,7 +185,7 @@ const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
             Desbloquear Tudo Por Apenas R$ 9
           </motion.button>
           <p className="text-xs text-muted-foreground mt-3 font-body">
-            Análise completa + plano de ação para retomar sua vida
+            Análise completa + plano de ação para fortalecer seu bem-estar
           </p>
         </motion.div>
       </div>

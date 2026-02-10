@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Download, CheckCircle2 } from 'lucide-react';
-import { Result, levelLabels, levelColors, getPersonalizedMessage } from '@/lib/scoring';
+import { Result, levelLabels, levelColors } from '@/lib/scoring';
 import { pillarLabels, pillarIcons, pillarDescriptions } from '@/data/questions';
 
 interface FullResultProps {
@@ -44,6 +44,16 @@ const assertivePhrases = [
   '"Eu entendo seu ponto de vista, e ao mesmo tempo, sinto que..."',
 ];
 
+const getResultMessage = (percentage: number) => {
+  if (percentage <= 39) {
+    return 'Seu resultado sugere uma base relativamente estável. Isso pode ajudar a entender o que você vem sentindo e indicar ajustes leves, caso queira evoluir.';
+  }
+  if (percentage <= 69) {
+    return 'Há sinais moderados que convidam à reflexão. Este diagnóstico pode organizar o que você vem sentindo e inspirar pequenos passos de cuidado.';
+  }
+  return 'Há indícios importantes que merecem atenção cuidadosa. O resultado pode esclarecer sensações recentes e apoiar escolhas mais conscientes.';
+};
+
 const FullResult = ({ result, showSuccess }: FullResultProps) => {
   const levelColor = levelColors[result.level];
 
@@ -69,7 +79,7 @@ const FullResult = ({ result, showSuccess }: FullResultProps) => {
             Seu Diagnóstico SINAL
           </h2>
           <p className="font-body text-muted-foreground text-sm max-w-md mx-auto">
-            {getPersonalizedMessage(result.level)}
+            {getResultMessage(result.percentage)}
           </p>
         </motion.div>
 
