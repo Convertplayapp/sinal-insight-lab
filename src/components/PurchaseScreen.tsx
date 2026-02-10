@@ -7,6 +7,8 @@ interface PurchaseScreenProps {
   onClose: () => void;
 }
 
+const logoUrl = '/logo-sinal.png';
+
 const PurchaseScreen = ({ onPurchase, onClose }: PurchaseScreenProps) => {
   const [email, setEmail] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -68,6 +70,7 @@ const PurchaseScreen = ({ onPurchase, onClose }: PurchaseScreenProps) => {
         </button>
 
         <div className="text-center mb-6">
+          <img src={logoUrl} alt="Método SINAL" className="h-10 w-auto mx-auto mb-3" />
           <span className="text-xs font-body tracking-[0.2em] uppercase text-accent mb-2 block">
             Checkout Seguro
           </span>

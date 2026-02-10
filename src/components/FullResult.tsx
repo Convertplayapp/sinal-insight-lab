@@ -8,6 +8,8 @@ interface FullResultProps {
   showSuccess?: boolean;
 }
 
+const logoUrl = '/logo-sinal.png';
+
 const actionPlans: Record<string, string[]> = {
   S: [
     'Reserve 10 minutos diários para conversar sobre sentimentos sem julgamento.',
@@ -72,6 +74,11 @@ const FullResult = ({ result, showSuccess }: FullResultProps) => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-10"
         >
+          <img
+            src={logoUrl}
+            alt="Método SINAL"
+            className="h-12 w-auto mx-auto mb-3"
+          />
           <span className="text-xs font-body tracking-[0.2em] uppercase text-accent mb-2 block">
             Análise Completa
           </span>

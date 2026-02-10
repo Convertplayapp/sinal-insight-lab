@@ -5,6 +5,8 @@ interface HeroSectionProps {
   onStart: () => void;
 }
 
+const logoUrl = '/logo-sinal.png';
+
 const HeroSection = ({ onStart }: HeroSectionProps) => {
   return (
     <div className="hero-gradient min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
@@ -24,6 +26,11 @@ const HeroSection = ({ onStart }: HeroSectionProps) => {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="mb-8"
         >
+          <img
+            src={logoUrl}
+            alt="Método SINAL"
+            className="h-14 w-auto mx-auto mb-4"
+          />
           <span className="text-primary-foreground/50 font-body text-sm tracking-[0.3em] uppercase">
             Método SINAL
           </span>

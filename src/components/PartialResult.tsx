@@ -8,6 +8,8 @@ interface PartialResultProps {
   onUnlock: () => void;
 }
 
+const logoUrl = '/logo-sinal.png';
+
 const visiblePillars: Pillar[] = ['S', 'I'];
 const lockedPillars: Pillar[] = ['N', 'A', 'L'];
 
@@ -59,6 +61,11 @@ const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
           transition={{ duration: 0.5 }}
           className="text-center mb-10"
         >
+          <img
+            src={logoUrl}
+            alt="Método SINAL"
+            className="h-12 w-auto mx-auto mb-3"
+          />
           <span className="text-xs font-body tracking-[0.2em] uppercase text-muted-foreground mb-2 block">
             Resultado da Análise
           </span>

@@ -6,6 +6,8 @@ interface QuizProps {
   onComplete: (answers: Record<number, number>) => void;
 }
 
+const logoUrl = '/logo-sinal.png';
+
 const Quiz = ({ onComplete }: QuizProps) => {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
@@ -33,6 +35,9 @@ const Quiz = ({ onComplete }: QuizProps) => {
       {/* Progress bar */}
       <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md border-b border-border px-4 py-3">
         <div className="max-w-xl mx-auto">
+          <div className="flex items-center justify-center mb-3">
+            <img src={logoUrl} alt="Método SINAL" className="h-7 w-auto" />
+          </div>
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-body text-muted-foreground">
               Pergunta {current + 1} de {questions.length}
