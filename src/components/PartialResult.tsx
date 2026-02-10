@@ -28,23 +28,33 @@ const lockedPillarSubtitles: Record<Pillar, string> = {
 };
 
 const getSummaryTitle = (percentage: number) => {
-  if (percentage <= 39) {
-    return 'Panorama equilibrado com oportunidades de crescimento';
+  if (percentage >= 70) {
+    return 'Você merece se sentir segura';
   }
-  if (percentage <= 69) {
-    return 'Sinais moderados que pedem atenção gentil';
+  if (percentage >= 40) {
+    return 'Aquilo que você sente tem nome';
   }
-  return 'Ponto importante de reflexão e cuidado';
+  return 'Seu relacionamento tem boas bases';
 };
 
 const getSummaryMessage = (percentage: number) => {
-  if (percentage <= 39) {
-    return `${percentage}% sugere estabilidade com espaço para ajustes opcionais. Isso pode explicar o que você vem sentindo e trazer mais clareza.`;
+  if (percentage >= 70) {
+    return 'O que você vem sentindo não é exagero. Esse resultado confirma padrões que muitas mulheres demoram anos para reconhecer. Você já deu o primeiro passo — e isso exige muita coragem.';
   }
-  if (percentage <= 69) {
-    return `${percentage}% indica sinais de desgaste leve a moderado. Esse resultado pode organizar o que você vem sentindo e incentivar autoconhecimento.`;
+  if (percentage >= 40) {
+    return 'Talvez você já tenha se perguntado se estava imaginando coisas, ou se era "só impressão". Não é. Seu resultado mostra sinais reais que merecem atenção — e entender exatamente quais são pode mudar a forma como você se posiciona.';
   }
-  return `${percentage}% aponta indícios mais relevantes. Esse resultado pode explicar o que você vem sentindo e apoiar decisões mais conscientes.`;
+  return 'Seu relacionamento apresenta fundamentos positivos. Ainda assim, pequenos padrões podem passar despercebidos no dia a dia. Entender seus pontos de atenção pode fortalecer ainda mais sua conexão.';
+};
+
+const getEmotionalCTA = (percentage: number) => {
+  if (percentage >= 70) {
+    return 'Você não precisa continuar com dúvidas. O diagnóstico completo vai te mostrar exatamente quais áreas estão sendo mais afetadas — e o que você pode fazer a partir de agora.';
+  }
+  if (percentage >= 40) {
+    return 'Quando a gente entende o que está acontecendo, para de se culpar. O resultado completo revela os padrões específicos do seu relacionamento e oferece um caminho claro de ação.';
+  }
+  return 'Conhecer seus pontos fortes e áreas de atenção pode te ajudar a manter e fortalecer o que já funciona bem no seu relacionamento.';
 };
 
 const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
@@ -175,10 +185,10 @@ const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
           transition={{ delay: 1.2 }}
           className="text-center"
         >
-          <p className="text-xs text-muted-foreground mb-2 font-body">
-            ⏰ 3.492 mulheres já conquistaram mais clareza sobre seus relacionamentos
+          <p className="font-body text-sm text-foreground/80 leading-relaxed max-w-sm mx-auto mb-5">
+            {getEmotionalCTA(result.percentage)}
           </p>
-          <p className="text-xs text-muted-foreground mb-3 font-body">
+          <p className="text-xs text-muted-foreground mb-2 font-body">
             💜 Acesso imediato e 100% confidencial
           </p>
           <motion.button
@@ -188,10 +198,10 @@ const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
             className="accent-gradient text-accent-foreground font-body font-semibold px-10 py-4 rounded-full text-lg shadow-glow transition-all duration-300 inline-flex items-center gap-2"
           >
             <Eye className="w-5 h-5" />
-            Desbloquear Tudo Por Apenas R$ 9
+            Quero Entender Meu Resultado Completo
           </motion.button>
           <p className="text-xs text-muted-foreground mt-3 font-body">
-            Análise completa + plano de ação para fortalecer seu bem-estar
+            Por apenas R$ 9 · Acesso imediato · Garantia de 7 dias
           </p>
         </motion.div>
       </div>
