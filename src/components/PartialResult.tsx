@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Lock, Eye } from 'lucide-react';
-import { Result, levelLabels, levelColors, getPersonalizedMessage } from '@/lib/scoring';
+import { Result, levelLabels, levelColors } from '@/lib/scoring';
 import { pillarLabels, pillarIcons, type Pillar } from '@/data/questions';
 
 interface PartialResultProps {
@@ -10,6 +10,22 @@ interface PartialResultProps {
 
 const visiblePillars: Pillar[] = ['S', 'I'];
 const lockedPillars: Pillar[] = ['N', 'A', 'L'];
+
+const lockedPillarLabels: Record<Pillar, string> = {
+  N: 'Ciclo de Manipulação',
+  A: 'Amor ou Prisão?',
+  L: 'Gatilhos Tóxicos',
+  S: pillarLabels.S,
+  I: pillarLabels.I,
+};
+
+const lockedPillarSubtitles: Record<Pillar, string> = {
+  N: 'Descubra se você está sendo controlada sem perceber',
+  A: 'A verdade sobre o que você está vivendo',
+  L: 'Os comportamentos que você normaliza mas não deveria',
+  S: '',
+  I: '',
+};
 
 const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
   const levelColor = levelColors[result.level];
@@ -59,10 +75,10 @@ const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
             </span>
           </div>
           <h3 className="font-display text-xl font-semibold text-foreground mb-1">
-            {levelLabels[result.level]}
+            Alerta: Seu Relacionamento Está Te Esgotando
           </h3>
           <p className="font-body text-sm text-muted-foreground leading-relaxed max-w-sm mx-auto">
-            {getPersonalizedMessage(result.level)}
+            Você sente que algo não está certo, mas talvez não consiga nomear. Os próximos resultados vão revelar padrões ocultos que podem mudar tudo.
           </p>
         </motion.div>
 
@@ -110,10 +126,13 @@ const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
                   <div className="flex items-center justify-between mb-3">
                     <span className="font-body text-sm font-medium text-foreground flex items-center gap-2">
                       <span>{pillarIcons[p.pillar]}</span>
-                      {pillarLabels[p.pillar]}
+                      {lockedPillarLabels[p.pillar]}
                     </span>
                     <span className="font-body text-sm font-semibold">--%</span>
                   </div>
+                  <p className="text-xs text-muted-foreground mb-3 font-body">
+                    {lockedPillarSubtitles[p.pillar]}
+                  </p>
                   <div className="w-full h-2 bg-muted rounded-full" />
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -130,6 +149,9 @@ const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
           transition={{ delay: 1.2 }}
           className="text-center"
         >
+          <p className="text-xs text-muted-foreground mb-3 font-body">
+            💜 Acesso imediato e 100% confidencial
+          </p>
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
@@ -137,10 +159,10 @@ const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
             className="accent-gradient text-accent-foreground font-body font-semibold px-10 py-4 rounded-full text-lg shadow-glow transition-all duration-300 inline-flex items-center gap-2"
           >
             <Eye className="w-5 h-5" />
-            Desbloquear Análise Completa
+            Ver Minha Análise Completa Por R$ 9
           </motion.button>
           <p className="text-xs text-muted-foreground mt-3 font-body">
-            Inclui diagnóstico completo + plano de ação personalizado
+            Análise completa + plano de ação para retomar sua vida
           </p>
         </motion.div>
       </div>
