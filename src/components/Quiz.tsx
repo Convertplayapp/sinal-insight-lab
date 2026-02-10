@@ -63,6 +63,14 @@ const Quiz = ({ onComplete }: QuizProps) => {
               transition={{ duration: 0.35, ease: 'easeOut' }}
               className="card-gradient rounded-2xl shadow-card p-8 md:p-10"
             >
+              <div className="flex justify-center mb-6">
+                <img
+                  src="https://res.cloudinary.com/dsxqn2er7/image/upload/v1770686747/ChatGPT_Image_9_de_fev._de_2026_22_19_32_t54d6l.png"
+                  alt="Método SINAL"
+                  className="w-32 md:w-36 opacity-90"
+                  loading="lazy"
+                />
+              </div>
               <p className="font-display text-xl md:text-2xl text-foreground leading-relaxed mb-10 text-center">
                 "{question.text}"
               </p>

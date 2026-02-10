@@ -22,6 +22,20 @@ const HeroSection = ({ onStart }: HeroSectionProps) => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
+          className="mb-6"
+        >
+          <img
+            src="https://res.cloudinary.com/dsxqn2er7/image/upload/v1770686747/ChatGPT_Image_9_de_fev._de_2026_22_19_32_t54d6l.png"
+            alt="Método SINAL"
+            className="w-60 md:w-72 mx-auto drop-shadow-[0_12px_32px_rgba(255,110,135,0.35)]"
+            loading="lazy"
+          />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
           className="mb-8"
         >
           <span className="text-primary-foreground/50 font-body text-sm tracking-[0.3em] uppercase">
