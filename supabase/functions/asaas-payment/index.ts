@@ -5,6 +5,19 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+type CustomerData = {
+  name: string;
+  email: string;
+  cpfCnpj?: string;
+  phone?: string;
+  address?: string;
+  addressNumber?: string;
+  complement?: string;
+  postalCode?: string;
+  province?: string;
+  city?: string;
+};
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -59,6 +72,54 @@ async function asaasFetch(apiKey: string, baseUrl: string, path: string, options
   return data;
 }
 
+function buildCustomerPayload(data: CustomerData) {
+  const payload: Record<string, unknown> = {
+    name: data.name,
+    email: data.email,
+  };
+  if (data.cpfCnpj) payload.cpfCnpj = data.cpfCnpj;
+  if (data.phone) payload.phone = data.phone;
+  if (data.address) payload.address = data.address;
+  if (data.addressNumber) payload.addressNumber = data.addressNumber;
+  if (data.complement) payload.complement = data.complement;
+  if (data.postalCode) payload.postalCode = data.postalCode;
+  if (data.province) payload.province = data.province;
+  if (data.city) payload.city = data.city;
+  return payload;
+}
+
+async function createCustomerRecord(apiKey: string, baseUrl: string, data: CustomerData) {
+  const existing = await asaasFetch(apiKey, baseUrl, `/customers?email=${encodeURIComponent(data.email)}`);
+  const payload = buildCustomerPayload(data);
+
+  if (existing.data && existing.data.length > 0) {
+    const current = existing.data[0];
+    const shouldUpdate =
+      (data.cpfCnpj && data.cpfCnpj !== current.cpfCnpj) ||
+      (data.phone && data.phone !== current.phone) ||
+      (data.postalCode && data.postalCode !== current.postalCode) ||
+      (data.address && data.address !== current.address) ||
+      (data.addressNumber && data.addressNumber !== current.addressNumber) ||
+      (data.complement && data.complement !== current.complement) ||
+      (data.province && data.province !== current.province) ||
+      (data.city && data.city !== current.city);
+
+    if (shouldUpdate) {
+      await asaasFetch(apiKey, baseUrl, `/customers/${current.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+      });
+    }
+    return current.id as string;
+  }
+
+  const customer = await asaasFetch(apiKey, baseUrl, '/customers', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+  return customer.id as string;
+}
+
 async function ensureCustomerCpfCnpj(apiKey: string, baseUrl: string, customerId: string, cpfCnpj?: string) {
   if (!cpfCnpj) return;
   const customer = await asaasFetch(apiKey, baseUrl, `/customers/${customerId}`);
@@ -70,46 +131,31 @@ async function ensureCustomerCpfCnpj(apiKey: string, baseUrl: string, customerId
   }
 }
 
-async function createCustomer(apiKey: string, baseUrl: string, params: { name: string; email: string; cpfCnpj?: string }) {
-  // Try to find existing customer by email first
-  const existing = await asaasFetch(apiKey, baseUrl, `/customers?email=${encodeURIComponent(params.email)}`);
-  if (existing.data && existing.data.length > 0) {
-    const current = existing.data[0];
-    if (params.cpfCnpj && params.cpfCnpj !== current.cpfCnpj) {
-      await asaasFetch(apiKey, baseUrl, `/customers/${current.id}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          name: params.name,
-          email: params.email,
-          cpfCnpj: params.cpfCnpj,
-        }),
-      });
-    }
-    return jsonResponse({ customerId: current.id });
-  }
-
-  const customer = await asaasFetch(apiKey, baseUrl, '/customers', {
-    method: 'POST',
-    body: JSON.stringify({
-      name: params.name,
-      email: params.email,
-      cpfCnpj: params.cpfCnpj,
-    }),
-  });
-  return jsonResponse({ customerId: customer.id });
+async function createCustomer(
+  apiKey: string,
+  baseUrl: string,
+  params: CustomerData
+) {
+  const customerId = await createCustomerRecord(apiKey, baseUrl, params);
+  return jsonResponse({ customerId });
 }
 
 async function createPixPayment(
   apiKey: string,
   baseUrl: string,
-  params: { customerId: string; value: number; description: string; cpfCnpj?: string }
+  params: { customerId?: string; customerData?: CustomerData; value: number; description: string; cpfCnpj?: string }
 ) {
-  await ensureCustomerCpfCnpj(apiKey, baseUrl, params.customerId, params.cpfCnpj);
+  const customerId = params.customerId || (params.customerData ? await createCustomerRecord(apiKey, baseUrl, params.customerData) : undefined);
+  if (!customerId) {
+    throw new Error('Customer data required');
+  }
+
+  await ensureCustomerCpfCnpj(apiKey, baseUrl, customerId, params.cpfCnpj || params.customerData?.cpfCnpj);
 
   const payment = await asaasFetch(apiKey, baseUrl, '/payments', {
     method: 'POST',
     body: JSON.stringify({
-      customer: params.customerId,
+      customer: customerId,
       billingType: 'PIX',
       value: params.value,
       dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -130,7 +176,8 @@ async function createPixPayment(
 }
 
 async function createCreditCardPayment(apiKey: string, baseUrl: string, params: {
-  customerId: string;
+  customerId?: string;
+  customerData?: CustomerData;
   value: number;
   description: string;
   cpfCnpj?: string;
@@ -150,12 +197,17 @@ async function createCreditCardPayment(apiKey: string, baseUrl: string, params: 
     phone: string;
   };
 }) {
-  await ensureCustomerCpfCnpj(apiKey, baseUrl, params.customerId, params.cpfCnpj);
+  const customerId = params.customerId || (params.customerData ? await createCustomerRecord(apiKey, baseUrl, params.customerData) : undefined);
+  if (!customerId) {
+    throw new Error('Customer data required');
+  }
+
+  await ensureCustomerCpfCnpj(apiKey, baseUrl, customerId, params.cpfCnpj || params.customerData?.cpfCnpj);
 
   const payment = await asaasFetch(apiKey, baseUrl, '/payments', {
     method: 'POST',
     body: JSON.stringify({
-      customer: params.customerId,
+      customer: customerId,
       billingType: 'CREDIT_CARD',
       value: params.value,
       dueDate: new Date().toISOString().split('T')[0],

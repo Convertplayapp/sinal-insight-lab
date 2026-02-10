@@ -110,21 +110,16 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
     setError('');
 
     try {
-      const customerData = await callAsaas({
-        action: 'create-customer',
-        name: name.trim(),
-        email: email.trim(),
-        cpfCnpj: cpf.replace(/\D/g, ''),
-      });
-      const customerId = customerData.customerId;
-
       if (method === 'pix') {
         const pixData = await callAsaas({
           action: 'create-pix',
-          customerId,
           value: PRODUCT_VALUE,
           description: PRODUCT_DESCRIPTION,
-          cpfCnpj: cpf.replace(/\D/g, ''),
+          customerData: {
+            name: name.trim(),
+            email: email.trim(),
+            cpfCnpj: cpf.replace(/\D/g, ''),
+          },
         });
         setPixQrCode(pixData.qrCodeImage);
         setPixPayload(pixData.qrCodePayload);
@@ -150,20 +145,19 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
     setError('');
 
     try {
-      const customerData = await callAsaas({
-        action: 'create-customer',
-        name: name.trim(),
-        email: email.trim(),
-        cpfCnpj: cpf.replace(/\D/g, ''),
-      });
       const [expiryMonth, expiryYear] = cardExpiry.split('/');
 
       const result = await callAsaas({
         action: 'create-credit-card',
-        customerId: customerData.customerId,
         value: PRODUCT_VALUE,
         description: PRODUCT_DESCRIPTION,
-        cpfCnpj: cpf.replace(/\D/g, ''),
+        customerData: {
+          name: name.trim(),
+          email: email.trim(),
+          cpfCnpj: cpf.replace(/\D/g, ''),
+          phone: phone.replace(/\D/g, ''),
+          postalCode: postalCode.replace(/\D/g, ''),
+        },
         creditCard: {
           holderName: cardHolder,
           number: cardNumber.replace(/\s/g, ''),
