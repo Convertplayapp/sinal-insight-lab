@@ -15,6 +15,23 @@ type Step = 'info' | 'payment' | 'processing' | 'success';
 const PRODUCT_VALUE = 9.0;
 const PRODUCT_DESCRIPTION = 'Método SINAL – Análise Completa de Relacionamento';
 
+const isValidCpf = (value: string) => {
+  const cpfClean = value.replace(/\D/g, '');
+  if (cpfClean.length !== 11) return false;
+  if (/^(\d)\1+$/.test(cpfClean)) return false;
+  const calcCheck = (factor: number) => {
+    let total = 0;
+    for (let i = 0; i < factor - 1; i++) {
+      total += Number(cpfClean.charAt(i)) * (factor - i);
+    }
+    const rest = (total * 10) % 11;
+    return rest === 10 ? 0 : rest;
+  };
+  const digit1 = calcCheck(10);
+  const digit2 = calcCheck(11);
+  return digit1 === Number(cpfClean.charAt(9)) && digit2 === Number(cpfClean.charAt(10));
+};
+
 const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
   const [step, setStep] = useState<Step>('info');
   const [method, setMethod] = useState<PaymentMethod>('pix');
@@ -37,6 +54,8 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
   const [cpf, setCpf] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [phone, setPhone] = useState('');
+
+  const cpfIsValid = isValidCpf(cpf);
 
   // Reset state when modal opens
   useEffect(() => {
@@ -83,6 +102,10 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
   const handleInfoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !cpf.trim()) return;
+    if (!cpfIsValid) {
+      setError('CPF inválido. Use um número de CPF válido.');
+      return;
+    }
     setLoading(true);
     setError('');
 
@@ -118,6 +141,10 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
 
   const handleCreditCardSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!cpfIsValid) {
+      setError('CPF inválido. Use um número de CPF válido.');
+      return;
+    }
     setLoading(true);
     setError('');
 
@@ -302,7 +329,7 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
                 type="submit"
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                disabled={!name || !email || !cpf || loading}
+                disabled={!name || !email || !cpf || !cpfIsValid || loading}
                 className="w-full accent-gradient text-accent-foreground font-body font-semibold py-3 rounded-xl text-sm shadow-glow transition-all disabled:opacity-60 flex items-center justify-center gap-2"
               >
                 {loading ? (
