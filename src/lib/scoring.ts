@@ -45,10 +45,10 @@ export function calculateResult(answers: Record<number, number>): Result {
   const percentage = Math.round((totalScore / maxTotal) * 100);
 
   let level: Level;
-  if (percentage >= 80) level = 'harmonia';
-  else if (percentage >= 60) level = 'estavel';
-  else if (percentage >= 40) level = 'atencao';
-  else level = 'desgaste';
+  if (percentage >= 80) level = 'desgaste';
+  else if (percentage >= 60) level = 'atencao';
+  else if (percentage >= 40) level = 'estavel';
+  else level = 'harmonia';
 
   return { totalScore, maxTotal, percentage, level, pillarScores };
 }

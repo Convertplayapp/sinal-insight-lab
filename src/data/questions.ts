@@ -8,7 +8,7 @@ export interface Question {
 
 export const pillarLabels: Record<Pillar, string> = {
   S: 'Segurança Emocional',
-  I: 'Independência',
+  I: 'Dependência Emocional',
   N: 'Nível de Comunicação',
   A: 'Apoio e Respeito',
   L: 'Liberdade Pessoal',
@@ -16,7 +16,7 @@ export const pillarLabels: Record<Pillar, string> = {
 
 export const pillarDescriptions: Record<Pillar, string> = {
   S: 'O quanto você se sente emocionalmente seguro(a) na relação.',
-  I: 'O quanto você mantém sua individualidade e autonomia.',
+  I: 'O quanto você precisa de aprovação e abre mão da autonomia.',
   N: 'A qualidade e profundidade da comunicação entre vocês.',
   A: 'O nível de apoio mútuo e respeito que existe na relação.',
   L: 'O espaço que você tem para ser quem é e viver sua vida.',
