@@ -45,13 +45,13 @@ const assertivePhrases = [
 ];
 
 const getResultMessage = (percentage: number) => {
-  if (percentage <= 39) {
-    return 'Seu resultado sugere uma base relativamente estável. Isso pode ajudar a entender o que você vem sentindo e indicar ajustes leves, caso queira evoluir.';
+  if (percentage >= 70) {
+    return 'Seu resultado revela padrões que merecem atenção real. Reconhecer esses sinais é um ato de coragem — e agora você tem clareza para agir com consciência.';
   }
-  if (percentage <= 69) {
-    return 'Há sinais moderados que convidam à reflexão. Este diagnóstico pode organizar o que você vem sentindo e inspirar pequenos passos de cuidado.';
+  if (percentage >= 40) {
+    return 'Existem dinâmicas no seu relacionamento que podem estar te afetando mais do que você percebe. Esse diagnóstico vai te ajudar a entender cada uma delas e fortalecer sua posição.';
   }
-  return 'Há indícios importantes que merecem atenção cuidadosa. O resultado pode esclarecer sensações recentes e apoiar escolhas mais conscientes.';
+  return 'Seu relacionamento demonstra uma base saudável. Confira os detalhes de cada pilar para manter e fortalecer o que já funciona bem.';
 };
 
 const FullResult = ({ result, showSuccess }: FullResultProps) => {
