@@ -34,7 +34,7 @@ export const questions: Question[] = [
   // S – Segurança Emocional
   { id: 1, text: 'Você tem medo de contar como realmente se sente para ele?', pillar: 'S' },
   { id: 2, text: 'Já aconteceu dele usar algo que você contou em confiança contra você em uma discussão?', pillar: 'S' },
-  { id: 3, text: 'Quando você está passando por um momento difícil, ele é a primeira pessoa que você quer procurar?', pillar: 'S' },
+  { id: 3, text: 'Quando você está passando por um momento difícil, sente que precisa lidar sozinha em vez de procurar ele?', pillar: 'S' },
 
   // I – Independência
   { id: 4, text: 'Você já deixou de fazer algo que gostava porque sabia que ele não ia gostar?', pillar: 'I' },
@@ -44,10 +44,10 @@ export const questions: Question[] = [
   // N – Nível de Comunicação
   { id: 7, text: 'Você \'engole\' o que sente para evitar uma briga?', pillar: 'N' },
   { id: 8, text: 'Quando você tenta conversar sobre algo que te incomoda, a discussão vira sobre outra coisa ou sobre você?', pillar: 'N' },
-  { id: 9, text: 'Ele realmente escuta o que você diz ou só espera a vez dele falar?', pillar: 'N' },
+  { id: 9, text: 'Com frequência ele só espera a vez dele falar, sem realmente escutar o que você diz?', pillar: 'N' },
 
   // A – Apoio e Respeito
-  { id: 10, text: 'Quando você conquista algo importante, ele fica genuinamente feliz ou meio que ignora?', pillar: 'A' },
+  { id: 10, text: 'Quando você conquista algo importante, ele minimiza ou ignora a sua conquista?', pillar: 'A' },
   { id: 11, text: 'Você sente que está sempre \'dando um jeitinho\' de não contrariá-lo?', pillar: 'A' },
   { id: 12, text: 'Nas decisões do casal, você sente que a opinião dele vale mais que a sua?', pillar: 'A' },
 
