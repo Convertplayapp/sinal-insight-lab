@@ -31,18 +31,33 @@ export const levelColors: Record<Level, string> = {
   desgaste: 'hsl(0 70% 55%)',
 };
 
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+const calculatePercentage = (score: number, minScore: number, maxScore: number) => {
+  if (maxScore === minScore) return 0;
+  const safeScore = clamp(score, minScore, maxScore);
+  return Math.round(((safeScore - minScore) / (maxScore - minScore)) * 100);
+};
+
 export function calculateResult(answers: Record<number, number>): Result {
   const pillars: Pillar[] = ['S', 'I', 'N', 'A', 'L'];
   const pillarScores: PillarScore[] = pillars.map((pillar) => {
     const pillarQuestions = questions.filter((q) => q.pillar === pillar);
     const maxScore = pillarQuestions.length * 5;
+    const minScore = pillarQuestions.length * 1;
     const score = pillarQuestions.reduce((sum, q) => sum + (answers[q.id] || 0), 0);
-    return { pillar, score, maxScore, percentage: Math.round((score / maxScore) * 100) };
+    return {
+      pillar,
+      score,
+      maxScore,
+      percentage: calculatePercentage(score, minScore, maxScore),
+    };
   });
 
   const totalScore = pillarScores.reduce((s, p) => s + p.score, 0);
   const maxTotal = pillarScores.reduce((s, p) => s + p.maxScore, 0);
-  const percentage = Math.round((totalScore / maxTotal) * 100);
+  const minTotal = questions.length * 1;
+  const percentage = calculatePercentage(totalScore, minTotal, maxTotal);
 
   let level: Level;
   if (percentage >= 80) level = 'desgaste';

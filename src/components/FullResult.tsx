@@ -156,7 +156,7 @@ const FullResult = ({ result, showSuccess }: FullResultProps) => {
           </h3>
           <div className="space-y-6">
             {result.pillarScores
-              .sort((a, b) => a.percentage - b.percentage)
+              .sort((a, b) => b.percentage - a.percentage)
               .slice(0, 3)
               .map((p) => (
                 <div key={p.pillar} className="card-gradient rounded-xl shadow-card p-6">
