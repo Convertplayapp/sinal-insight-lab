@@ -34,10 +34,10 @@ const Quiz = ({ onComplete }: QuizProps) => {
       <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-md border-b border-border px-4 py-3">
         <div className="max-w-xl mx-auto">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-body text-muted-foreground">
+            <span className="text-xs font-body text-muted-foreground font-medium">
               Pergunta {current + 1} de {questions.length}
             </span>
-            <span className="text-xs font-body text-muted-foreground">
+            <span className="text-xs font-body text-muted-foreground font-medium">
               {Math.round(progress)}%
             </span>
           </div>
@@ -61,17 +61,17 @@ const Quiz = ({ onComplete }: QuizProps) => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -40 }}
               transition={{ duration: 0.35, ease: 'easeOut' }}
-              className="card-gradient rounded-2xl shadow-card p-8 md:p-10"
+              className="card-gradient rounded-2xl shadow-card p-8 md:p-10 border border-border/70"
             >
               <div className="flex justify-center mb-6">
                 <img
                   src="https://res.cloudinary.com/dsxqn2er7/image/upload/v1770687848/ChatGPT_Image_9_de_fev._de_2026_22_43_53_opkwkq.png"
                   alt="Método SINAL"
-                  className="w-32 md:w-36 opacity-90"
+                  className="w-32 md:w-36 opacity-95"
                   loading="lazy"
                 />
               </div>
-              <p className="font-display text-xl md:text-2xl text-foreground leading-relaxed mb-10 text-center">
+              <p className="font-display text-xl md:text-2xl text-foreground leading-relaxed mb-10 text-center font-semibold">
                 "{question.text}"
               </p>
 
@@ -85,15 +85,15 @@ const Quiz = ({ onComplete }: QuizProps) => {
                       whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleAnswer(value)}
-                      className={`w-full text-left px-5 py-3.5 rounded-xl border font-body text-sm transition-all duration-200 ${
+                      className={`w-full text-left px-5 py-3.5 rounded-xl border font-body text-sm transition-all duration-200 shadow-sm ${
                         isSelected
-                          ? 'border-accent bg-accent/10 text-foreground font-medium'
-                          : 'border-border bg-card text-muted-foreground hover:border-accent/40 hover:bg-accent/5'
+                          ? 'border-primary bg-primary text-primary-foreground font-semibold shadow-glow'
+                          : 'border-border/80 bg-white text-foreground/80 hover:border-accent hover:bg-accent/10 hover:text-foreground'
                       }`}
                     >
                       <span className="inline-flex items-center gap-3">
                         <span className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs transition-colors ${
-                          isSelected ? 'border-accent bg-accent text-accent-foreground' : 'border-muted-foreground/30'
+                          isSelected ? 'border-primary bg-primary text-primary-foreground' : 'border-muted-foreground/40'
                         }`}>
                           {isSelected && '✓'}
                         </span>
@@ -110,7 +110,7 @@ const Quiz = ({ onComplete }: QuizProps) => {
           {current > 0 && (
             <button
               onClick={() => setCurrent(current - 1)}
-              className="mt-6 text-sm text-muted-foreground hover:text-foreground transition-colors font-body mx-auto block"
+              className="mt-6 text-sm text-muted-foreground hover:text-foreground transition-colors font-body mx-auto block font-medium"
             >
               ← Voltar
             </button>
