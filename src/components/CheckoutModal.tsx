@@ -284,7 +284,7 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
               </div>
 
               <div>
-                <label className="text-xs font-body text-muted-foreground">CPF ou CNPJ</label>
+                <label className="text-xs font-body text-muted-foreground">CPF</label>
                 <input
                   value={cpf}
                   onChange={(e) => setCpf(e.target.value)}
