@@ -59,6 +59,17 @@ async function asaasFetch(apiKey: string, baseUrl: string, path: string, options
   return data;
 }
 
+async function ensureCustomerCpfCnpj(apiKey: string, baseUrl: string, customerId: string, cpfCnpj?: string) {
+  if (!cpfCnpj) return;
+  const customer = await asaasFetch(apiKey, baseUrl, `/customers/${customerId}`);
+  if (customer?.cpfCnpj !== cpfCnpj) {
+    await asaasFetch(apiKey, baseUrl, `/customers/${customerId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ cpfCnpj }),
+    });
+  }
+}
+
 async function createCustomer(apiKey: string, baseUrl: string, params: { name: string; email: string; cpfCnpj?: string }) {
   // Try to find existing customer by email first
   const existing = await asaasFetch(apiKey, baseUrl, `/customers?email=${encodeURIComponent(params.email)}`);
@@ -88,7 +99,13 @@ async function createCustomer(apiKey: string, baseUrl: string, params: { name: s
   return jsonResponse({ customerId: customer.id });
 }
 
-async function createPixPayment(apiKey: string, baseUrl: string, params: { customerId: string; value: number; description: string }) {
+async function createPixPayment(
+  apiKey: string,
+  baseUrl: string,
+  params: { customerId: string; value: number; description: string; cpfCnpj?: string }
+) {
+  await ensureCustomerCpfCnpj(apiKey, baseUrl, params.customerId, params.cpfCnpj);
+
   const payment = await asaasFetch(apiKey, baseUrl, '/payments', {
     method: 'POST',
     body: JSON.stringify({
@@ -116,6 +133,7 @@ async function createCreditCardPayment(apiKey: string, baseUrl: string, params: 
   customerId: string;
   value: number;
   description: string;
+  cpfCnpj?: string;
   creditCard: {
     holderName: string;
     number: string;
@@ -132,6 +150,8 @@ async function createCreditCardPayment(apiKey: string, baseUrl: string, params: 
     phone: string;
   };
 }) {
+  await ensureCustomerCpfCnpj(apiKey, baseUrl, params.customerId, params.cpfCnpj);
+
   const payment = await asaasFetch(apiKey, baseUrl, '/payments', {
     method: 'POST',
     body: JSON.stringify({

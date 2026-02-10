@@ -124,6 +124,7 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
           customerId,
           value: PRODUCT_VALUE,
           description: PRODUCT_DESCRIPTION,
+          cpfCnpj: cpf.replace(/\D/g, ''),
         });
         setPixQrCode(pixData.qrCodeImage);
         setPixPayload(pixData.qrCodePayload);
@@ -162,6 +163,7 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
         customerId: customerData.customerId,
         value: PRODUCT_VALUE,
         description: PRODUCT_DESCRIPTION,
+        cpfCnpj: cpf.replace(/\D/g, ''),
         creditCard: {
           holderName: cardHolder,
           number: cardNumber.replace(/\s/g, ''),
