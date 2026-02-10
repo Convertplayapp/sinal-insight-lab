@@ -82,12 +82,17 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
 
   const handleInfoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim()) return;
+    if (!name.trim() || !email.trim() || !cpf.trim()) return;
     setLoading(true);
     setError('');
 
     try {
-      const customerData = await callAsaas({ action: 'create-customer', name: name.trim(), email: email.trim() });
+      const customerData = await callAsaas({
+        action: 'create-customer',
+        name: name.trim(),
+        email: email.trim(),
+        cpfCnpj: cpf.replace(/\D/g, ''),
+      });
       const customerId = customerData.customerId;
 
       if (method === 'pix') {
@@ -117,7 +122,12 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
     setError('');
 
     try {
-      const customerData = await callAsaas({ action: 'create-customer', name: name.trim(), email: email.trim() });
+      const customerData = await callAsaas({
+        action: 'create-customer',
+        name: name.trim(),
+        email: email.trim(),
+        cpfCnpj: cpf.replace(/\D/g, ''),
+      });
       const [expiryMonth, expiryYear] = cardExpiry.split('/');
 
       const result = await callAsaas({
@@ -273,6 +283,17 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
                 />
               </div>
 
+              <div>
+                <label className="text-xs font-body text-muted-foreground">CPF ou CNPJ</label>
+                <input
+                  value={cpf}
+                  onChange={(e) => setCpf(e.target.value)}
+                  required
+                  className="w-full mt-1 rounded-lg border border-border bg-background/80 px-3 py-2 text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40"
+                  placeholder="000.000.000-00"
+                />
+              </div>
+
               {error && (
                 <p className="text-xs text-destructive font-body text-center">{error}</p>
               )}
@@ -281,7 +302,7 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
                 type="submit"
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                disabled={!name || !email || loading}
+                disabled={!name || !email || !cpf || loading}
                 className="w-full accent-gradient text-accent-foreground font-body font-semibold py-3 rounded-xl text-sm shadow-glow transition-all disabled:opacity-60 flex items-center justify-center gap-2"
               >
                 {loading ? (

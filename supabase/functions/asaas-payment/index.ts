@@ -59,7 +59,7 @@ async function asaasFetch(apiKey: string, baseUrl: string, path: string, options
   return data;
 }
 
-async function createCustomer(apiKey: string, baseUrl: string, params: { name: string; email: string }) {
+async function createCustomer(apiKey: string, baseUrl: string, params: { name: string; email: string; cpfCnpj?: string }) {
   // Try to find existing customer by email first
   const existing = await asaasFetch(apiKey, baseUrl, `/customers?email=${encodeURIComponent(params.email)}`);
   if (existing.data && existing.data.length > 0) {
@@ -71,6 +71,7 @@ async function createCustomer(apiKey: string, baseUrl: string, params: { name: s
     body: JSON.stringify({
       name: params.name,
       email: params.email,
+      cpfCnpj: params.cpfCnpj,
     }),
   });
   return jsonResponse({ customerId: customer.id });
