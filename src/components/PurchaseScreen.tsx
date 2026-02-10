@@ -69,7 +69,7 @@ const PurchaseScreen = ({ onPurchase, onClose }: PurchaseScreenProps) => {
 
         <div className="text-center mb-6">
           <img
-            src="https://res.cloudinary.com/dsxqn2er7/image/upload/v1770686747/ChatGPT_Image_9_de_fev._de_2026_22_19_32_t54d6l.png"
+            src="https://res.cloudinary.com/dsxqn2er7/image/upload/v1770687848/ChatGPT_Image_9_de_fev._de_2026_22_43_53_opkwkq.png"
             alt="Método SINAL"
             className="w-36 mx-auto mb-4 opacity-90"
             loading="lazy"
