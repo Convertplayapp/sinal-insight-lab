@@ -61,7 +61,7 @@ const Quiz = ({ onComplete }: QuizProps) => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -40 }}
               transition={{ duration: 0.35, ease: 'easeOut' }}
-              className="rounded-2xl shadow-card p-8 md:p-10 bg-purple-700/20 border border-purple-500/40"
+              className="card-gradient rounded-2xl shadow-card p-8 md:p-10"
             >
               <div className="flex justify-center mb-6">
                 <img
