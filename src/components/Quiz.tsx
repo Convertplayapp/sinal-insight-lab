@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { Link2, Heart, LineChart } from 'lucide-react';
 import { questions, scaleLabels } from '@/data/questions';
 
 interface QuizProps {
@@ -10,60 +11,19 @@ const Quiz = ({ onComplete }: QuizProps) => {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisTarget, setAnalysisTarget] = useState(0);
+  const [analysisDisplay, setAnalysisDisplay] = useState(0);
   const [finalAnswers, setFinalAnswers] = useState<Record<number, number>>({});
-  const [targetPercent, setTargetPercent] = useState(0);
-  const [displayPercent, setDisplayPercent] = useState(0);
-  const [analysisComplete, setAnalysisComplete] = useState(false);
 
   const question = questions[current];
   const progress = ((current) / questions.length) * 100;
   const hasAnswer = answers[question.id] !== undefined;
 
-  const calculatePercent = (values: Record<number, number>) => {
-    const sum = Object.values(values).reduce((acc, value) => acc + value, 0);
+  const calculateTarget = (data: Record<number, number>) => {
+    const total = Object.values(data).reduce((acc, value) => acc + value, 0);
     const max = questions.length * 5;
-    return Math.round((sum / max) * 100);
+    return Math.round((total / max) * 100);
   };
-
-  useEffect(() => {
-    if (!isAnalyzing) return;
-
-    setDisplayPercent(0);
-    setAnalysisComplete(false);
-    const target = targetPercent;
-    const duration = 2600;
-    const start = performance.now();
-    let frame = 0;
-
-    const tick = (now: number) => {
-      const progress = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplayPercent(Math.round(eased * target));
-      if (progress < 1) {
-        frame = requestAnimationFrame(tick);
-      }
-    };
-
-    frame = requestAnimationFrame(tick);
-
-    return () => cancelAnimationFrame(frame);
-  }, [isAnalyzing, targetPercent]);
-
-  useEffect(() => {
-    if (!isAnalyzing) return;
-    const timer = setTimeout(() => {
-      onComplete(finalAnswers);
-    }, 5200);
-
-    return () => clearTimeout(timer);
-  }, [isAnalyzing, finalAnswers, onComplete]);
-
-  useEffect(() => {
-    if (!isAnalyzing) return;
-    if (displayPercent >= targetPercent) {
-      setAnalysisComplete(true);
-    }
-  }, [displayPercent, targetPercent, isAnalyzing]);
 
   const handleAnswer = (value: number) => {
     const newAnswers = { ...answers, [question.id]: value };
@@ -74,134 +34,154 @@ const Quiz = ({ onComplete }: QuizProps) => {
       if (current < questions.length - 1) {
         setCurrent(current + 1);
       } else {
-        const calculated = calculatePercent(newAnswers);
         setFinalAnswers(newAnswers);
-        setTargetPercent(calculated);
+        setAnalysisTarget(calculateTarget(newAnswers));
         setIsAnalyzing(true);
       }
     }, 400);
   };
 
-  if (isAnalyzing) {
-    const radius = 70;
-    const circumference = 2 * Math.PI * radius;
-    const strokeOffset = circumference - (displayPercent / 100) * circumference;
+  useEffect(() => {
+    if (!isAnalyzing) return;
 
+    setAnalysisDisplay(0);
+    const duration = 2800;
+    const start = performance.now();
+    let raf = 0;
+
+    const animate = (now: number) => {
+      const progressTime = Math.min((now - start) / duration, 1);
+      const value = Math.round(analysisTarget * progressTime);
+      setAnalysisDisplay(value);
+      if (progressTime < 1) {
+        raf = requestAnimationFrame(animate);
+      }
+    };
+
+    raf = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(raf);
+  }, [isAnalyzing, analysisTarget]);
+
+  useEffect(() => {
+    if (!isAnalyzing) return;
+    const timeout = setTimeout(() => {
+      onComplete(finalAnswers);
+    }, 5200);
+
+    return () => clearTimeout(timeout);
+  }, [isAnalyzing, finalAnswers, onComplete]);
+
+  if (isAnalyzing) {
     return (
-      <div className="min-h-screen analysis-gradient flex items-center justify-center px-4 py-12 text-white">
-        <div className="w-full max-w-xl flex flex-col items-center text-center gap-6">
+      <div className="min-h-screen analysis-gradient flex items-center justify-center px-4 py-12 text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_55%)]" />
+        <div className="relative max-w-md w-full text-center space-y-6">
           <motion.h1
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="font-display text-2xl md:text-3xl font-semibold"
+            transition={{ duration: 0.6 }}
+            className="font-display text-3xl md:text-4xl font-semibold"
           >
             Analisando suas respostas…
           </motion.h1>
           <motion.p
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
-            className="text-sm md:text-base text-white/80 max-w-md"
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="font-body text-sm md:text-base text-purple-100/90"
           >
             Estamos cruzando seus dados com milhares de perfis semelhantes.
           </motion.p>
 
-          <div className="flex items-center gap-2">
-            <span className="analysis-dot" />
-            <span className="analysis-dot analysis-dot-delay" />
-            <span className="analysis-dot analysis-dot-delay-2" />
-          </div>
-
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
+            initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
-            className={`relative flex items-center justify-center mt-2 ${analysisComplete ? 'analysis-glow' : ''}`}
+            transition={{ delay: 0.35, duration: 0.6 }}
+            className="relative mx-auto w-44 h-44 flex items-center justify-center"
           >
-            <svg width="180" height="180" className="-rotate-90">
-              <defs>
-                <linearGradient id="analysisStroke" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.85)" />
-                  <stop offset="60%" stopColor="rgba(210,165,255,0.95)" />
-                  <stop offset="100%" stopColor="rgba(255,255,255,0.7)" />
-                </linearGradient>
-              </defs>
-              <circle
-                cx="90"
-                cy="90"
-                r={radius}
-                stroke="rgba(255,255,255,0.15)"
-                strokeWidth="10"
-                fill="transparent"
-              />
-              <circle
-                cx="90"
-                cy="90"
-                r={radius}
-                stroke="url(#analysisStroke)"
-                strokeWidth="10"
-                fill="transparent"
-                strokeDasharray={circumference}
-                strokeDashoffset={strokeOffset}
+            <svg className="w-44 h-44" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="6" />
+              <motion.circle
+                cx="50" cy="50" r="42"
+                fill="none"
+                stroke="rgba(255,255,255,0.9)"
+                strokeWidth="6"
                 strokeLinecap="round"
+                strokeDasharray={264}
+                initial={{ strokeDashoffset: 264 }}
+                animate={{ strokeDashoffset: 264 - (264 * analysisTarget) / 100 }}
+                transition={{ duration: 2.8, ease: 'easeOut' }}
+                transform="rotate(-90 50 50)"
               />
             </svg>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="font-display text-4xl font-semibold">{displayPercent}%</span>
+            <div
+              className={`absolute flex flex-col items-center justify-center w-28 h-28 rounded-full bg-white/10 border border-white/20 ${
+                analysisDisplay >= analysisTarget ? 'analysis-glow' : ''
+              }`}
+            >
+              <span className="font-display text-3xl font-bold">{analysisDisplay}%</span>
+              <span className="text-[11px] text-purple-100/80">concluído</span>
             </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.3 }}
-            className="glass rounded-2xl border border-white/20 px-6 py-5 text-left w-full"
+            transition={{ delay: 0.55, duration: 0.5 }}
+            className="flex items-center justify-center gap-4 text-purple-100/80 text-xs font-body"
           >
-            <p className="text-sm md:text-base text-white/90 font-medium mb-4">
+            <span className="flex items-center gap-2"><Link2 className="w-4 h-4" />Conexão</span>
+            <span className="flex items-center gap-2"><LineChart className="w-4 h-4" />Análise</span>
+            <span className="flex items-center gap-2"><Heart className="w-4 h-4" />Relacionamento</span>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7, duration: 0.6 }}
+            className="glass rounded-2xl p-6 text-left text-sm leading-relaxed border border-white/20"
+          >
+            <p className="font-body text-purple-50/90 mb-3">
               + de 23.000 mulheres com resultados semelhantes ao seu conseguiram, através do Método Sinal:
             </p>
-            <ul className="space-y-3 text-sm md:text-base text-white/85">
-              <li className="flex items-start gap-3">
-                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/10 border border-white/20">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 3l2.1 4.3L19 8l-3.5 3.4L16.3 16 12 13.8 7.7 16l.8-4.6L5 8l4.9-.7L12 3z" />
-                  </svg>
-                </span>
+            <ul className="space-y-2 text-purple-50/85">
+              <li className="flex items-start gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-white/70 mt-2" />
                 Identificar perfis abusivos
               </li>
-              <li className="flex items-start gap-3">
-                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/10 border border-white/20">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 12a8 8 0 1 1-8-8" />
-                    <path d="M20 4v8h-8" />
-                  </svg>
-                </span>
+              <li className="flex items-start gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-white/70 mt-2" />
                 Entender se o relacionamento ainda tinha solução
               </li>
-              <li className="flex items-start gap-3">
-                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/10 border border-white/20">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 22s7-4.5 7-11a7 7 0 0 0-14 0c0 6.5 7 11 7 11z" />
-                    <circle cx="12" cy="11" r="3" />
-                  </svg>
-                </span>
+              <li className="flex items-start gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-white/70 mt-2" />
                 Aprender como agir com segurança e clareza
               </li>
             </ul>
           </motion.div>
 
           <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.4 }}
-            className="text-sm md:text-base text-white/90"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.95, duration: 0.6 }}
+            className="font-body text-sm text-purple-50/90"
           >
             Você não está sozinha. Seu resultado pode trazer respostas importantes.
           </motion.p>
 
-          <div className="w-full max-w-sm h-1.5 bg-white/15 rounded-full overflow-hidden">
-            <div className="analysis-progress-bar h-full w-1/2" />
+          <div className="flex items-center justify-center gap-2">
+            <span className="pulse-dot" />
+            <span className="pulse-dot pulse-delay-1" />
+            <span className="pulse-dot pulse-delay-2" />
+          </div>
+
+          <div className="h-1 bg-white/20 rounded-full overflow-hidden mx-auto w-full max-w-xs">
+            <motion.div
+              className="h-full bg-white/70"
+              animate={{ width: `${analysisDisplay}%` }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+            />
           </div>
         </div>
       </div>
