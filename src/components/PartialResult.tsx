@@ -20,9 +20,9 @@ const lockedPillarLabels: Record<Pillar, string> = {
 };
 
 const lockedPillarSubtitles: Record<Pillar, string> = {
-  N: 'Descubra se você está sendo controlada sem perceber',
-  A: 'A verdade sobre o que você está vivendo',
-  L: 'Os comportamentos que você normaliza mas não deveria',
+  N: 'Você está sendo controlada sem perceber?',
+  A: 'Descubra se isso é amor de verdade',
+  L: 'Os sinais que você ignora todo dia',
   S: '',
   I: '',
 };
@@ -78,7 +78,7 @@ const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
             Alerta: Seu Relacionamento Está Te Esgotando
           </h3>
           <p className="font-body text-sm text-muted-foreground leading-relaxed max-w-sm mx-auto">
-            Você sente que algo não está certo, mas talvez não consiga nomear. Os próximos resultados vão revelar padrões ocultos que podem mudar tudo.
+            {result.percentage}% é um sinal de alerta. O que está bloqueado pode ser a resposta que você procura há meses.
           </p>
         </motion.div>
 
@@ -149,6 +149,9 @@ const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
           transition={{ delay: 1.2 }}
           className="text-center"
         >
+          <p className="text-xs text-muted-foreground mb-2 font-body">
+            ⏰ 3.492 mulheres já descobriram a verdade sobre seus relacionamentos
+          </p>
           <p className="text-xs text-muted-foreground mb-3 font-body">
             💜 Acesso imediato e 100% confidencial
           </p>
@@ -159,7 +162,7 @@ const PartialResult = ({ result, onUnlock }: PartialResultProps) => {
             className="accent-gradient text-accent-foreground font-body font-semibold px-10 py-4 rounded-full text-lg shadow-glow transition-all duration-300 inline-flex items-center gap-2"
           >
             <Eye className="w-5 h-5" />
-            Ver Minha Análise Completa Por R$ 9
+            Desbloquear Tudo Por Apenas R$ 9
           </motion.button>
           <p className="text-xs text-muted-foreground mt-3 font-body">
             Análise completa + plano de ação para retomar sua vida
