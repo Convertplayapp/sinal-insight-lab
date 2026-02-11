@@ -554,10 +554,10 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
         {step !== 'success' && (
           <div className="mt-4 space-y-1 text-center">
             <div className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground font-body">
-              <Clock className="w-3 h-3" /> Acesso liberado automaticamente após pagamento
+              <Clock className="w-3 h-3" /> Liberação imediata após pagamento
             </div>
             <div className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground font-body">
-              <Shield className="w-3 h-3" /> Ambiente seguro · Garantia de 7 dias
+              <Shield className="w-3 h-3" /> Pagamento 100% seguro · Garantia de 7 dias
             </div>
           </div>
         )}
