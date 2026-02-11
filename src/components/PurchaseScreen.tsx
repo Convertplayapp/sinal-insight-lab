@@ -65,8 +65,8 @@ const PurchaseScreen = ({ onPurchase, onClose }: PurchaseScreenProps) => {
 
           <div className="rounded-xl border border-border/60 p-5 mb-6">
             <div className="flex items-baseline justify-center gap-1">
-              <span className="text-sm text-muted-foreground font-body">R$</span>
-              <span className="font-display text-5xl font-bold text-foreground">9,00</span>
+              <span className="text-sm text-purple-600 font-body animate-pulse">R$</span>
+              <span className="font-display text-5xl font-bold text-purple-600 animate-pulse">9,00</span>
             </div>
             <p className="text-xs text-muted-foreground font-body text-center mt-1">
               Menos que o valor de um lanche.
