@@ -73,12 +73,15 @@ async function asaasFetch(apiKey: string, baseUrl: string, path: string, options
 }
 
 function buildCustomerPayload(data: CustomerData) {
+  if (!data.cpfCnpj) {
+    throw new Error('CPF/CNPJ é obrigatório');
+  }
   const payload: Record<string, unknown> = {
     name: data.name,
     email: data.email,
+    cpfCnpj: data.cpfCnpj,
   };
-  if (data.cpfCnpj) payload.cpfCnpj = data.cpfCnpj;
-  if (data.phone) payload.phone = data.phone;
+  if (data.phone) payload.mobilePhone = data.phone;
   if (data.address) payload.address = data.address;
   if (data.addressNumber) payload.addressNumber = data.addressNumber;
   if (data.complement) payload.complement = data.complement;

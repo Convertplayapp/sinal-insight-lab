@@ -32,13 +32,38 @@ const isValidCpf = (value: string) => {
   return digit1 === Number(cpfClean.charAt(9)) && digit2 === Number(cpfClean.charAt(10));
 };
 
+const formatCpf = (value: string) => {
+  const digits = value.replace(/\D/g, '').slice(0, 11);
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
+  if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
+  return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`;
+};
+
+const formatPhone = (value: string) => {
+  const digits = value.replace(/\D/g, '').slice(0, 11);
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+};
+
+const formatCep = (value: string) => {
+  const digits = value.replace(/\D/g, '').slice(0, 8);
+  if (digits.length <= 5) return digits;
+  return `${digits.slice(0, 5)}-${digits.slice(5)}`;
+};
+
 const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
   const [step, setStep] = useState<Step>('info');
   const [method, setMethod] = useState<PaymentMethod>('pix');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [phone, setPhone] = useState('');
+  const [postalCode, setPostalCode] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [cpfTouched, setCpfTouched] = useState(false);
 
   // PIX state
   const [pixQrCode, setPixQrCode] = useState('');
@@ -51,11 +76,10 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
   const [cardNumber, setCardNumber] = useState('');
   const [cardExpiry, setCardExpiry] = useState('');
   const [cardCvv, setCardCvv] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [postalCode, setPostalCode] = useState('');
-  const [phone, setPhone] = useState('');
 
+  const cpfClean = cpf.replace(/\D/g, '');
   const cpfIsValid = isValidCpf(cpf);
+  const showCpfError = cpfTouched && cpfClean.length === 11 && !cpfIsValid;
 
   // Reset state when modal opens
   useEffect(() => {
@@ -101,7 +125,7 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
 
   const handleInfoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim() || !cpf.trim()) return;
+    if (!name.trim() || !email.trim() || !cpf.trim() || !phone.trim() || !postalCode.trim()) return;
     if (!cpfIsValid) {
       setError('CPF inválido. Use um número de CPF válido.');
       return;
@@ -109,17 +133,21 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
     setLoading(true);
     setError('');
 
+    const customerData = {
+      name: name.trim(),
+      email: email.trim(),
+      cpfCnpj: cpf.replace(/\D/g, ''),
+      phone: phone.replace(/\D/g, ''),
+      postalCode: postalCode.replace(/\D/g, ''),
+    };
+
     try {
       if (method === 'pix') {
         const pixData = await callAsaas({
           action: 'create-pix',
           value: PRODUCT_VALUE,
           description: PRODUCT_DESCRIPTION,
-          customerData: {
-            name: name.trim(),
-            email: email.trim(),
-            cpfCnpj: cpf.replace(/\D/g, ''),
-          },
+          customerData,
         });
         setPixQrCode(pixData.qrCodeImage);
         setPixPayload(pixData.qrCodePayload);
@@ -310,11 +338,38 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
                 <label className="text-xs font-body text-muted-foreground">CPF</label>
                 <input
                   value={cpf}
-                  onChange={(e) => setCpf(e.target.value)}
+                  onChange={(e) => { setCpf(formatCpf(e.target.value)); setCpfTouched(true); }}
+                  onBlur={() => setCpfTouched(true)}
                   required
-                  className="w-full mt-1 rounded-lg border border-border bg-background/80 px-3 py-2 text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40"
+                  className={`w-full mt-1 rounded-lg border bg-background/80 px-3 py-2 text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 ${showCpfError ? 'border-destructive' : 'border-border'}`}
                   placeholder="000.000.000-00"
                 />
+                {showCpfError && (
+                  <p className="text-[11px] text-destructive font-body mt-0.5">CPF inválido</p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-body text-muted-foreground">Telefone</label>
+                  <input
+                    value={phone}
+                    onChange={(e) => setPhone(formatPhone(e.target.value))}
+                    required
+                    className="w-full mt-1 rounded-lg border border-border bg-background/80 px-3 py-2 text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40"
+                    placeholder="(00) 00000-0000"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-body text-muted-foreground">CEP</label>
+                  <input
+                    value={postalCode}
+                    onChange={(e) => setPostalCode(formatCep(e.target.value))}
+                    required
+                    className="w-full mt-1 rounded-lg border border-border bg-background/80 px-3 py-2 text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40"
+                    placeholder="00000-000"
+                  />
+                </div>
               </div>
 
               {error && (
@@ -325,7 +380,7 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
                 type="submit"
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                disabled={!name || !email || !cpf || !cpfIsValid || loading}
+                disabled={!name || !email || !cpfIsValid || !phone.replace(/\D/g, '') || !postalCode.replace(/\D/g, '') || loading}
                 className="w-full accent-gradient text-accent-foreground font-body font-semibold py-3 rounded-xl text-sm shadow-glow transition-all disabled:opacity-60 flex items-center justify-center gap-2"
               >
                 {loading ? (
@@ -444,39 +499,6 @@ const CheckoutModal = ({ open, onClose, onSuccess }: CheckoutModalProps) => {
                 </div>
               </div>
 
-              <div>
-                <label className="text-xs font-body text-muted-foreground">CPF</label>
-                <input
-                  value={cpf}
-                  onChange={(e) => setCpf(e.target.value)}
-                  required
-                  className="w-full mt-1 rounded-lg border border-border bg-background/80 px-3 py-2 text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40"
-                  placeholder="000.000.000-00"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-body text-muted-foreground">CEP</label>
-                  <input
-                    value={postalCode}
-                    onChange={(e) => setPostalCode(e.target.value)}
-                    required
-                    className="w-full mt-1 rounded-lg border border-border bg-background/80 px-3 py-2 text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40"
-                    placeholder="00000-000"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-body text-muted-foreground">Telefone</label>
-                  <input
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                    className="w-full mt-1 rounded-lg border border-border bg-background/80 px-3 py-2 text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-accent/40"
-                    placeholder="(00) 00000-0000"
-                  />
-                </div>
-              </div>
 
               {error && (
                 <p className="text-xs text-destructive font-body text-center">{error}</p>
