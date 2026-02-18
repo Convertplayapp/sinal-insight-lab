@@ -31,12 +31,12 @@ const PurchaseScreen = ({ onPurchase, onClose }: PurchaseScreenProps) => {
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 overflow-y-auto py-4">
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.25 }}
-          className="w-full max-w-md card-gradient rounded-2xl shadow-elevated p-6 md:p-8 relative"
+          className="w-full max-w-md card-gradient rounded-2xl shadow-elevated p-6 md:p-8 relative my-auto"
         >
           <button
             onClick={onClose}
