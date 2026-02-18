@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Download, CheckCircle2, AlertTriangle, Heart, BookOpen, MessageCircle, ShieldAlert, Lightbulb, Star } from 'lucide-react';
 import { Result, levelLabels, levelColors } from '@/lib/scoring';
 import { Pillar, pillarLabels, pillarIcons, pillarDescriptions } from '@/data/questions';
+import logoBlack from '@/assets/logo-black.png';
 
 interface FullResultProps {
   result: Result;
@@ -306,7 +307,7 @@ const FullResult = ({ result, showSuccess }: FullResultProps) => {
           className="text-center mb-10"
         >
           <img
-            src="https://res.cloudinary.com/dsxqn2er7/image/upload/v1770686747/ChatGPT_Image_9_de_fev._de_2026_22_19_32_t54d6l.png"
+            src={logoBlack}
             alt="Método SINAL"
             className="w-44 md:w-52 mx-auto mb-4 opacity-90"
             loading="lazy"

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Lock, CreditCard, X, Clock, QrCode, Check } from 'lucide-react';
 import CheckoutModal from './CheckoutModal';
+import logoBlack from '@/assets/logo-black.png';
 
 interface PurchaseScreenProps {
   onPurchase: () => void;
@@ -47,7 +48,7 @@ const PurchaseScreen = ({ onPurchase, onClose }: PurchaseScreenProps) => {
 
           <div className="text-center mb-7">
             <img
-              src="https://res.cloudinary.com/dsxqn2er7/image/upload/v1770687848/ChatGPT_Image_9_de_fev._de_2026_22_43_53_opkwkq.png"
+              src={logoBlack}
               alt="Método SINAL"
               className="w-36 mx-auto mb-4 opacity-90"
               loading="lazy"
