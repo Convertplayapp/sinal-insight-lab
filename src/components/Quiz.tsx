@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { Link2, Heart, LineChart } from 'lucide-react';
 import { questions, scaleLabels } from '@/data/questions';
+import logoBlack from '@/assets/logo-black.png';
 
 interface QuizProps {
   onComplete: (answers: Record<number, number>) => void;
@@ -225,7 +226,7 @@ const Quiz = ({ onComplete }: QuizProps) => {
             >
               <div className="flex justify-center mb-6">
                 <img
-                  src="https://res.cloudinary.com/dsxqn2er7/image/upload/v1770687848/ChatGPT_Image_9_de_fev._de_2026_22_43_53_opkwkq.png"
+                  src={logoBlack}
                   alt="Método SINAL"
                   className="w-32 md:w-36 opacity-95"
                   loading="lazy"
