@@ -1,65 +1,55 @@
 
-# Corrigir Payload ASAAS e Validacao de CPF
+
+# Substituir Logos do Cloudinary por Imagens Locais
 
 ## Problema
-A API do ASAAS exige o campo `cpfCnpj` como obrigatorio para criar clientes. Alem disso, o CPF precisa ser validado antes do envio. Atualmente, o CPF so e coletado na tela inicial mas nao e enviado corretamente em todos os fluxos, e falta mascara de formatacao no campo.
+As imagens da logo estao hospedadas no Cloudinary, que esta com a conta desativada. O usuario enviou duas versoes da logo para uso local.
 
-## Mudancas Planejadas
+## Regra de uso
+- **Logo com fonte branca** (22_19_32) -- paginas escuras (HeroSection)
+- **Logo com fonte preta** (22_43_53) -- paginas claras (Quiz, PartialResult, FullResult, PurchaseScreen)
 
-### 1. CheckoutModal.tsx - Frontend
+## Situacao atual e correcoes
 
-**Adicionar mascara de CPF**: Formatar automaticamente o campo CPF para `000.000.000-00` enquanto o usuario digita.
+| Componente | Fundo | Logo atual | Logo correta | Acao |
+|---|---|---|---|---|
+| HeroSection | Escuro (hero-gradient) | 22_19_32 (branca) | Branca | Trocar URL por local |
+| Quiz | Claro (card-gradient) | 22_43_53 (preta) | Preta | Trocar URL por local |
+| PartialResult | Claro (bg-background) | 22_19_32 (branca) | Preta | Trocar URL e versao |
+| FullResult | Claro (bg-background) | 22_19_32 (branca) | Preta | Trocar URL e versao |
+| PurchaseScreen | Claro | 22_43_53 (preta) | Preta | Trocar URL por local |
 
-**Adicionar campos obrigatorios para ambos os metodos**: Mover os campos Telefone e CEP para a etapa `info` (primeira tela), pois o ASAAS exige esses dados para criar o cliente, tanto para PIX quanto para Cartao.
+## Passos
 
-**Validacao visual de CPF**: Mostrar indicador de erro inline abaixo do campo CPF quando o valor for invalido (apos o usuario comecar a digitar), usando a funcao `isValidCpf` ja existente.
+1. Copiar as duas imagens enviadas para `src/assets/`:
+   - `src/assets/logo-white.png` (fonte branca, para fundos escuros)
+   - `src/assets/logo-black.png` (fonte preta, para fundos claros)
 
-**Garantir envio completo do payload**: Incluir `phone` e `postalCode` no `customerData` enviado para o fluxo PIX (atualmente so e enviado no fluxo de cartao).
+2. Atualizar cada componente para importar a logo local via ES6 module import e usar a versao correta:
+   - **HeroSection.tsx**: import logo-white, usar em `src={logoWhite}`
+   - **Quiz.tsx**: import logo-black, usar em `src={logoBlack}`
+   - **PartialResult.tsx**: trocar de logo branca para logo-black (correcao)
+   - **FullResult.tsx**: trocar de logo branca para logo-black (correcao)
+   - **PurchaseScreen.tsx**: import logo-black, usar em `src={logoBlack}`
 
-### 2. Edge Function (asaas-payment/index.ts) - Backend
+## Detalhes tecnicos
 
-**Tornar `cpfCnpj` obrigatorio**: Validar no servidor que `cpfCnpj` esta presente no `customerData` antes de chamar a API do ASAAS. Retornar erro claro se estiver ausente.
+Cada componente recebera um import no topo do arquivo:
 
-**Sempre incluir `cpfCnpj` no payload do cliente**: Alterar `buildCustomerPayload` para tratar `cpfCnpj` como campo obrigatorio (nao condicional).
-
-**Adicionar `phone` ao payload do cliente**: Garantir que telefone tambem seja enviado quando disponivel.
-
----
-
-## Detalhes Tecnicos
-
-### Campos enviados ao ASAAS (Customer)
-| Campo | Obrigatorio | Origem |
-|-------|------------|--------|
-| name | Sim | Formulario |
-| email | Sim | Formulario |
-| cpfCnpj | Sim | Formulario (validado) |
-| phone | Recomendado | Formulario |
-| postalCode | Recomendado | Formulario |
-
-### Funcao de mascara CPF (nova)
 ```text
-Entrada: 12345678900
-Saida:   123.456.789-00
+import logoBlack from '@/assets/logo-black.png';
+// ou
+import logoWhite from '@/assets/logo-white.png';
 ```
 
-### Validacao CPF (ja existente, sera reutilizada)
-- Remove caracteres nao numericos
-- Verifica 11 digitos
-- Rejeita sequencias repetidas (111.111.111-11)
-- Calcula digitos verificadores
-
-### Fluxo corrigido
+E a tag img passara de:
 ```text
-Tela Info: Nome + Email + CPF (com mascara) + Telefone + CEP
-           -> Validacao CPF inline
-           -> Se PIX: envia customerData completo, gera QR
-           -> Se Cartao: avanca para dados do cartao
-
-Tela Cartao: Nome no cartao + Numero + Validade + CVV
-             -> Envia customerData + creditCard + creditCardHolderInfo
+src="https://res.cloudinary.com/..."
+```
+para:
+```text
+src={logoBlack}  // ou src={logoWhite}
 ```
 
-### Alteracoes no edge function
-- `buildCustomerPayload`: campo `cpfCnpj` deixa de ser condicional
-- Validacao server-side: rejeitar requests sem `cpfCnpj` com mensagem "CPF/CNPJ e obrigatorio"
+Isso elimina a dependencia do Cloudinary e garante que as imagens funcionem tanto em preview quanto no site publicado.
+
